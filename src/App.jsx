@@ -1,22 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.js
+import React, { useState, useEffect } from 'react';
+import { apiUrl, filterData } from './utils/data';
+import { toast } from "react-toastify";
+import CourseHero from './components/CourseHero';
+import Filter from './components/Filter';
+const App = () => {
+  const [courses, setCourses] = useState([]);
 
-function App() {
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      console.log(data.data);
+      setCourses(data.data);
+    }
+    catch (err) {
+      toast.error("Something went wrong");
+    }
+  }
 
 
-  //navbar
-  //Categories
-    //Button and Filteration
-  //Top Level Courses
-    //CourseCards-rendered here
-    
+  useEffect(() => {
+    fetchData()
+  }, []);
 
+  console.log("App Rendered")
   return (
-    <>
-    </>
-  )
-}
+    <div className="flex flex-col ">
+        <Filter filterData={filterData} courses={courses} filteredCourses={setCourses} />
+      <CourseHero courses={courses}></CourseHero>
+    
+    </div>
+  );
+};
 
-export default App
+export default App;
